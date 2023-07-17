@@ -1,16 +1,91 @@
 # show_case_view
 
-A new Flutter project.
+<img width="300" alt="image" src="https://github.com/YamamotoDesu/show_case_view/assets/47273077/696eb769-9692-4c87-94ab-303161a6f6a6">
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+```dart
+import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 
-A few resources to get you started if this is your first Flutter project:
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+class _HomePageState extends State<HomePage> {
+  final GlobalKey _add = GlobalKey();
+  final GlobalKey _item = GlobalKey();
+  final GlobalKey _search = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(context).startShowCase([_add, _item, _search]);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home Page'),
+        centerTitle: false,
+        backgroundColor: Colors.green,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Showcase(
+              key: _search,
+              description: 'Tap to search item',
+              overlayOpacity: 0.5,
+              targetShapeBorder: const CircleBorder(),
+              targetPadding: const EdgeInsets.all(8),
+              child: const Icon(
+                Icons.search,
+              ),
+            ),
+          )
+        ],
+      ),
+      floatingActionButton: Showcase(
+        key: _add,
+        description: 'Tap to add on item',
+        overlayOpacity: 0.5,
+        targetShapeBorder: const CircleBorder(),
+        child: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: Colors.green,
+          child: const Icon(Icons.add),
+        ),
+      ),
+      body: ListView.builder(
+        itemCount: 8,
+        itemBuilder: (context, index) => index == 4
+            ? Showcase(
+                key: _item,
+                overlayOpacity: 0.5,
+                description: 'Tap to see details',
+                child: listItem(index),
+              )
+            : listItem(index),
+      ),
+    );
+  }
+
+  listItem(int index) {
+    return ListTile(
+      leading: const CircleAvatar(
+        backgroundColor: Colors.green,
+        child: Icon(Icons.apps),
+      ),
+      title: Text('Flutter Title Example $index'),
+      subtitle: Text('Flutter sub title data $index'),
+      trailing: const Text('July 2023'),
+    );
+  }
+}
+
+```
